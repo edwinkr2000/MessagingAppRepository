@@ -19,7 +19,6 @@ import com.parse.ParseUser;
  */
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
 
-
     ViewPager pager;
 
     @Override
@@ -118,6 +117,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
+
+
 
 
 }
