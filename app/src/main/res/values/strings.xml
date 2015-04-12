@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MessagingApp</string>
+    <string name="messages_tab">Messages</string>
+    <string name="contacts_tab">Contacts</string>
+    <string name="settings_menu">Settings</string>
+    <string name="search_menu">Search</string>
+    <string name="email_address_hint">email address:\ </string>
+    <string name="password_hint">password </string>
+    <string name="sign_up">Register New Account</string>
+    <string name="log_in_error_title">Oops!</string>
+</resources>

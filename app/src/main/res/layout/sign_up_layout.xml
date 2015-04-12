@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:padding="16dp">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:hint="First Name"
+        android:id="@+id/first_name_tv"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/last_name_tv"
+        android:layout_alignStart="@+id/last_name_tv"
+        android:layout_marginTop="29dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:hint="Last Name"
+        android:id="@+id/last_name_tv"
+        android:layout_below="@+id/first_name_tv"
+        android:layout_alignLeft="@+id/email_et"
+        android:layout_alignStart="@+id/email_et"
+        android:layout_marginTop="31dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:hint="@string/email_address_hint"
+        android:id="@+id/email_et"
+        android:layout_below="@+id/last_name_tv"
+        android:layout_alignLeft="@+id/password_et"
+        android:layout_alignStart="@+id/password_et"
+        android:layout_marginTop="29dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:hint="@string/password_hint"
+        android:id="@+id/password_et"
+        android:layout_below="@+id/email_et"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up >"
+        android:id="@+id/sign_up_button"
+        android:layout_below="@+id/password_et"
+        android:layout_alignRight="@+id/password_et"
+        android:layout_alignEnd="@+id/password_et"
+        android:layout_marginTop="51dp" />
+</RelativeLayout>
