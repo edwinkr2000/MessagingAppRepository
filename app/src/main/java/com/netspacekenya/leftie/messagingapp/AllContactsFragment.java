@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Edwin on 03-Apr-15.
  */
-public class ContactsFragment extends Fragment{
+public class AllContactsFragment extends Fragment{
 
     View rootView;
     RecyclerView recyclerView;
@@ -31,6 +31,7 @@ public class ContactsFragment extends Fragment{
     boolean succeeded = false;
     List<ParseUser> emptyList;
     ProgressBar bar;
+    static List<ParseUser> allContacts;
 
 
     @Override
@@ -38,18 +39,21 @@ public class ContactsFragment extends Fragment{
 
 
 
-        rootView = inflater.inflate(R.layout.contacts_layout, container, false);
+        rootView = inflater.inflate(R.layout.all_contacts_layout, container, false);
 
-        if(savedInstanceState==null) {
+
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             bar = (ProgressBar) rootView.findViewById(R.id.bar);
+
             layoutManager = new LinearLayoutManager(getActivity());
+
+            ///init empty list for use by adapter before list is returned from cloud
             emptyList = new ArrayList<ParseUser>();
             recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(new ContactsAdapter(emptyList));
-            getAllContacts();
+            recyclerView.setAdapter(new AllContactsAdapter(getActivity(), emptyList));
 
-          }
+
+
 
             return rootView;
 
@@ -64,9 +68,11 @@ public class ContactsFragment extends Fragment{
 
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
+                bar.setVisibility(View.GONE);
                 if(e==null && parseUsers!=null){
                     ///success
-                    adapter = new ContactsAdapter(parseUsers);
+                    allContacts = parseUsers;
+                    adapter = new AllContactsAdapter(getActivity(),parseUsers);
                     ///remove current user from list
                     parseUsers.remove(ParseUser.getCurrentUser());
 
@@ -79,7 +85,7 @@ public class ContactsFragment extends Fragment{
                 }
             }
         });
-        bar.setVisibility(View.GONE);
+
         return succeeded;
 
     }

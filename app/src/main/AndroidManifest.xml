@@ -13,13 +13,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-
             </intent-filter>
+
             </activity>
         <activity android:name=".LogInActivity"/>
         <activity android:name=".SignUpActivity"
             android:parentActivityName=".LogInActivity"/>
-        <activity android:name=".TestData"/>
+
+        <activity android:name=".ConversationActivity"
+            android:parentActivityName=".MainActivity"/>
 
     </application>
 

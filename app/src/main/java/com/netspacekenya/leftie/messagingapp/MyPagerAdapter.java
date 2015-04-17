@@ -24,11 +24,14 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new MessagesFragment();
             case 1:
-              ContactsFragment frag = new ContactsFragment();
+                return new FriendsFragment();
 
-
-                return frag;
             case 2:
+                AllContactsFragment frag = new AllContactsFragment();
+
+
+                return new AllContactsFragment();
+            case 3:
                 return new MiscFragment();
         }
 
@@ -37,6 +40,6 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 }
