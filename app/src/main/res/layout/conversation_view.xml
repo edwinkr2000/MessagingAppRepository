@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?android:attr/selectableItemBackground">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,7 +20,8 @@
         android:id="@+id/sender_iv" />
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content">
 
         <TextView
@@ -34,5 +41,14 @@
             android:text="last_text"
             android:id="@+id/last_text_tv" />
     </LinearLayout>
+    <TextView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/badgeContainer"/>
 
+</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"/>
 </LinearLayout>

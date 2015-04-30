@@ -1,7 +1,13 @@
 package com.netspacekenya.leftie.messagingapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -12,9 +18,14 @@ import android.widget.Toast;
 
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.io.IOException;
+
 
 /**
  * Created by Edwin on 03-Apr-15.
@@ -22,12 +33,32 @@ import com.parse.SaveCallback;
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, ContactDialogListener{
 
     ViewPager pager;
+    ParseUser currentUser;
     ParseRelation<ParseUser> parseRelation;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+        currentUser = ParseUser.getCurrentUser();
+        if(currentUser==null){
+            ///not logged in
+            Intent logInIntent = new Intent(this, LogInActivity.class);
+            logInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            logInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(logInIntent);
+           }
+        //subscibe to push notifications
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        if(currentUser!=null) {
+            installation.put(AppConstants.KEY_CURRENT_USER, ParseUser.getCurrentUser().getObjectId());
+            installation.saveInBackground();
+            ParsePush.subscribeInBackground(AppConstants.KEY_MESSAGING_CHANNEL);
+
+        }
+
         pager = (ViewPager) findViewById(R.id.pager);
         setUpTabs(getSupportActionBar());
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -51,15 +82,33 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
        pager.setCurrentItem(0);
 
-        ///load friends relation
-
 
 
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
          getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuItem picItem = menu.findItem(R.id.ppic_menu);
+        Bitmap b = getProfilePic();
+        if(b!=null) picItem.setIcon(new BitmapDrawable(b));
         return super.onCreateOptionsMenu(menu);
+    }
+    private Bitmap getProfilePic(){
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String picURI = prefs.getString("profile picture", "");
+        Bitmap bitmap;
+        if(picURI !=null && !picURI.equals("")){
+
+            try {
+                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),Uri.parse(picURI));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            return bitmap;
+
+        }
+        return null;
     }
 
     @Override

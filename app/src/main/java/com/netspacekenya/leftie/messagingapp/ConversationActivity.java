@@ -1,10 +1,7 @@
 package com.netspacekenya.leftie.messagingapp;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,17 +11,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
+import messagingapp.datastorage.DBops;
+import messagingapp.datastorage.SendMessageTask;
 
 /**
  * Created by Edwin on 14-Apr-15.
@@ -33,12 +25,12 @@ public class ConversationActivity extends ActionBarActivity {
     EditText message_et;
     RecyclerView messages_rv;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
-    List<String> messageList;
-    static int mPointer=0;
+    MessagesAdapter adapter;
+    List<Message> messageList;
     InputMethodManager imm;
-    String recipientUserName;
+    String recipientid;
     ParseUser currentUser;
+    DBops dBops;
 
 
     public final int TAKE_PHOTO_REQUESTCODE=001;
@@ -51,9 +43,11 @@ public class ConversationActivity extends ActionBarActivity {
 
         currentUser = ParseUser.getCurrentUser();
         imm= (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        recipientUserName =  getIntent().getStringExtra("clicked userName");
+        recipientid=  getIntent().getStringExtra("clicked userName");
 
-        messageList = new ArrayList<String>();
+        ///get list from db
+        dBops = new DBops(this);
+        messageList = dBops.getConversationForFriend(recipientid);
         message_et = (EditText) findViewById(R.id.message_et);
         messages_rv = (RecyclerView) findViewById(R.id.messages_rv);
 
@@ -61,11 +55,8 @@ public class ConversationActivity extends ActionBarActivity {
 
 
         messages_rv.setLayoutManager(layoutManager);
-        adapter = new MessagesAdapter(messageList);
+        adapter = new MessagesAdapter(this, messageList);
         messages_rv.setAdapter(adapter);
-
-
-
 
     }
     public void onCameraButtonClicked(View v){
@@ -82,24 +73,35 @@ public class ConversationActivity extends ActionBarActivity {
 
     }
     private boolean takePhoto(){
-        Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File myPhotoDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                                                                                                getResources().getString(R.string.app_name));
-        if(!myPhotoDir.exists()){
-            //dir doesn't exist, create new folder
-           if(!myPhotoDir.mkdir()){
-               //error creating dirs
-               return false;
+   return false;
+    }
+
+    public void onSendButtonClicked(View v){
+        String message = message_et.getText().toString().trim();
+        if(!message.equals("")){
+            sendTextMessage(message);
+
            }
-        }
+        message_et.setText("");
+        imm.hideSoftInputFromWindow(message_et.getWindowToken(), 0);
 
+    }
 
-        File photo = new File(myPhotoDir, "img_"+new SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.getDefault()).format(new Date())+".jpg");
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.conversation_layout_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-        startActivityForResult(photoIntent, TAKE_PHOTO_REQUESTCODE);
-        return true;
+    private void sendTextMessage(String text){
 
+        Message m = new Message(text, currentUser.getObjectId(), recipientid);
+        SendMessageTask mTask = new SendMessageTask(this, m, recipientid);
+        mTask.execute();
+    }
+    public void refresh(){
+        adapter.setData(new DBops(this).getConversationForFriend(recipientid));
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -110,49 +112,5 @@ public class ConversationActivity extends ActionBarActivity {
 
         }
     }
-    public void onSendButtonClicked(View v){
-        String message = message_et.getText().toString().trim();
-        if(!message.equals("")){
-            saveMessageToCloud(message);
-            message_et.setText("");
-            imm.hideSoftInputFromWindow(message_et.getWindowToken(), 0);
-        }
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.conversation_layout_menu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private void saveMessageToCloud(final String message){
-
-        ParseObject messageObject = new ParseObject(AppConstants.CLASS_MESSAGE);
-        messageObject.put(AppConstants.KEY_SENDER_ID,currentUser.getUsername());
-        messageObject.put(AppConstants.KEY_RECIPIENT_ID,recipientUserName);
-        messageObject.put(AppConstants.KEY_MESSAGE, message);
-
-        messageObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e==null){
-                    ///success
-                    messageList.add(message);
-                    adapter.notifyDataSetChanged();
-                }
-                else{
-                    ///fail
-                    Toast.makeText(ConversationActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-
-    }
-    private boolean loadMessagesFromCloud(){
-
-
-        return false;
-    }
 }

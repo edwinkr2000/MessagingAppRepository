@@ -67,7 +67,8 @@
         android:layout_marginTop="42dp"
         android:clickable="true"
         android:textColor="#007FFF"
-        android:enabled="true" />
+        android:enabled="true"
+        android:background="?android:attr/selectableItemBackground"/>
 
     <ProgressBar
         android:layout_width="wrap_content"

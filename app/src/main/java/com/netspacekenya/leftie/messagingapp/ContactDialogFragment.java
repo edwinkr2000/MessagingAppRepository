@@ -7,6 +7,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
+import com.parse.ParseUser;
+
+import messagingapp.datastorage.AddFriendTask;
+
 /**
  * Created by Edwin on 14-Apr-15.
  */
@@ -21,9 +25,15 @@ public class ContactDialogFragment extends android.support.v4.app.DialogFragment
             @Override
             public void onClick(DialogInterface dialog, int clicked) {
                 dialog.dismiss();
+                if(clicked==0) {
 
-                selectedUserPosition = getArguments().getInt("position");
-                listener.onContactDialogOptionSelected(clicked, selectedUserPosition);
+                    selectedUserPosition = getArguments().getInt("position");
+                    ParseUser selectedUser = AllContactsFragment.allContacts.get(selectedUserPosition);
+                    AddFriendTask fTask = new AddFriendTask(getActivity(), selectedUser);
+                    fTask.execute();
+
+                }
+
             }
         });
 

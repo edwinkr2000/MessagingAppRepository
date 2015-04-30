@@ -42,6 +42,7 @@ public class AllContactsAdapter extends RecyclerView.Adapter<AllContactsAdapter.
             @Override
             public boolean onLongClick(View v) {
                 ContactDialogFragment dialogFrag = new ContactDialogFragment();
+                ParseUser selectedUser = contactsList.get(position);
                 Bundle b = new Bundle();
                 b.putInt("position", position);
                 dialogFrag.setArguments(b);

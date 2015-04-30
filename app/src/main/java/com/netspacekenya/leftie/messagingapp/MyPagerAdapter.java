@@ -27,8 +27,6 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
                 return new FriendsFragment();
 
             case 2:
-                AllContactsFragment frag = new AllContactsFragment();
-
 
                 return new AllContactsFragment();
             case 3:

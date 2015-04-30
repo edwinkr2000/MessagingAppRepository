@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
+import com.parse.ParseObject;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ import java.util.List;
  * Created by Edwin on 13-Apr-15.
  */
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.Holder> {
-    List<ParseUser> friendsList;
+    List<ParseObject> friendsList;
     FragmentActivity activity;
-    public FriendsAdapter(List<ParseUser> friendsList, FragmentActivity activity) {
+    public FriendsAdapter(List<ParseObject> friendsList, FragmentActivity activity) {
         this.activity = activity;
         this.friendsList = friendsList;
     }
@@ -33,13 +33,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.Holder> 
 
     @Override
     public void onBindViewHolder(Holder holder, final int position) {
-        holder.tv.setText(friendsList.get(position).getUsername());
+        holder.tv.setText(friendsList.get(position).getString(AppConstants.KEY_FIRST_NAME));
         holder.v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent conversationIntent = new Intent(activity, ConversationActivity.class);
-                ParseUser clickedUser = friendsList.get(position);
-                conversationIntent.putExtra("clicked userName",clickedUser.getUsername());
+                conversationIntent.putExtra("clicked userName", friendsList.get(position).getObjectId());
                 activity.startActivity(conversationIntent);
             }
         });

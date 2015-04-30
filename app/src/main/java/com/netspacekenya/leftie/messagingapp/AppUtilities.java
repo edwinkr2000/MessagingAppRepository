@@ -9,9 +9,11 @@ public  class AppUtilities {
 
     public static boolean isExternalStorageAvailable(){
         String extStorageState = Environment.getExternalStorageState();
-        if(extStorageState.equals(Environment.MEDIA_MOUNTED)) return true;
+        if(extStorageState.equals(Environment.MEDIA_MOUNTED)){
+            return true;
+        }
+            return false;
 
-        else return false;
     }
 
 }

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="5dp">
+
+
+   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:id="@+id/message_container">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/message_tv"
-        android:linksClickable="true" />
+        android:linksClickable="true"/>
 
-</android.support.v7.widget.CardView>
+   </RelativeLayout>
+
+
